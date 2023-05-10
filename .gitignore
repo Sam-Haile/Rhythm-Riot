@@ -70,3 +70,19 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Unity generated build settings
+/[Bb]uild/[Cc]ache/
+
+# Unity Package Manager
+/[Uu]pm/[Cc]ache/
+/[Uu]pm/[Ll]ogs/
+
+# Generated Unity TextMesh Pro files
+/[Aa]ssets/[Tt]mp/[Tt]extMesh[^\w]Pro/
+
+# iOS build files
+/[Bb]uild/[Ii]os/
+
+# Android build files
+/[Bb]uild/[Aa]ndroid/
