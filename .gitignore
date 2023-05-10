@@ -81,8 +81,6 @@ crashlytics-build.properties
 # Generated Unity TextMesh Pro files
 /[Aa]ssets/[Tt]mp/[Tt]extMesh[^\w]Pro/
 
-# iOS build files
-/[Bb]uild/[Ii]os/
+#Package Caches
+/[Ll]ibrary/[Pp]ackage[Cc]ache/
 
-# Android build files
-/[Bb]uild/[Aa]ndroid/
