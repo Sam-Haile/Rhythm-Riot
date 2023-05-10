@@ -84,3 +84,29 @@ crashlytics-build.properties
 #Package Caches
 /[Ll]ibrary/[Pp]ackage[Cc]ache/
 
+# Ignore build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+*.apk
+*.aab
+*.app
+*.ipa
+*.xcarchive
+*.ap_*
+*.msi
+*.jar
+*.war
+*.ear
+*.class
+*.swf
+*.dSYM/
+*.pdb
+*.ipch/
+*.lib
+*.obj
+*.o
+*.a
+*.bin
+*.cache
