@@ -5,15 +5,10 @@ using UnityEngine;
 public class Note : MonoBehaviour
 {
 
-    public GameObject player;
-
-
-
-
     // Destroy the object once collected
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("NoteSensor"))
         {
             Destroy(gameObject);
         }

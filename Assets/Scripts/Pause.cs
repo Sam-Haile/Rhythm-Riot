@@ -33,6 +33,10 @@ public class Pause : MonoBehaviour
 
     }
 
+    public void Settings()
+    {
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))

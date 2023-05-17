@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class OneWayPlatform : MonoBehaviour
 {
-
     [Tooltip("The direction that the other object should be coming from for entry.")]
     [SerializeField]
     private Vector3 entryDirection = Vector3.up;
@@ -24,8 +23,6 @@ public class OneWayPlatform : MonoBehaviour
     [Tooltip("The trigger that we add ourselves once the game starts up.")]
     private BoxCollider collisionCheckTrigger = null;
 
-    /// <summary> The entry direction, calculated accordingly based on whether it is a local direction or not. 
-    /// This is pretty much what I've done in the video when copy-pasting the local direction check, but written as a property. </summary>
     public Vector3 PassthroughDirection => localDirection ? transform.InverseTransformDirection(entryDirection.normalized) : entryDirection.normalized;
 
     private void Awake()
@@ -92,7 +89,7 @@ public class OneWayPlatform : MonoBehaviour
         }
 
     }
-
+    /*
     /// <summary>
     /// Used to allow player to go to lower platform
     /// </summary>
@@ -107,6 +104,7 @@ public class OneWayPlatform : MonoBehaviour
             }
         }
     }
+    */
 
     private void OnDrawGizmosSelected()
     {

@@ -14,7 +14,6 @@ public class PlayerMovement : MonoBehaviour
     //Used for tracking sliding ability
     private bool canSlide = false;
 
-    public float timer = 5f;
 
 
     private float gravityScale = 1.0f;
@@ -24,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
+
     }
 
     void FixedUpdate()
@@ -35,22 +35,15 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timer -= Time.deltaTime;
-       
-        if (timer <= 0f)
-        {
-            timer = 0f;
-        }
-
         // Move player right at constant speed
-        Vector3 startPos = transform.position; 
+        Vector3 startPos = transform.position;
         transform.Translate(transform.right * moveSpeed * Time.deltaTime);
-        Vector3 endPos = transform.position; 
+        Vector3 endPos = transform.position;
 
         Debug.DrawLine(startPos, endPos, Color.green, 2f);
 
         // Check for jump input
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W))
         {
             // If the player is on the ground, jump
             if (isGrounded)
