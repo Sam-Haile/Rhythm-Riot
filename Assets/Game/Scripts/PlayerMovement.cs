@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Unity.Burst.CompilerServices;
-using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -24,7 +24,14 @@ public class PlayerMovement : MonoBehaviour
 
     public MMFeedbacks jumpFeedback;
     public MMFeedbacks landingFeedback;
+    public MMFeedbacks timeFeedback;
     public GameObject jumpParticles;
+
+
+    [HideInInspector]
+    public bool airJump;
+    [HideInInspector]
+    public bool grindJump;
 
     void Start()
     {
@@ -48,6 +55,11 @@ public class PlayerMovement : MonoBehaviour
 
         SlideInput();
 
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            timeFeedback?.StopFeedbacks();
+        }
+
         //jumpParticles.transform.position = new Vector3(transform.position.x, transform.position.y -1.1f, transform.position.z);
     }
 
@@ -56,8 +68,9 @@ public class PlayerMovement : MonoBehaviour
         // Check for jump input
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W))
         {
-            jumpFeedback.transform.position = new Vector3(transform.position.x, transform.position.y -1.1f, transform.position.z);
+            jumpFeedback.transform.position = new Vector3(transform.position.x + 1, transform.position.y, transform.position.z);
             jumpFeedback?.PlayFeedbacks();
+            airJump = true;
 
             // If the player is on the ground, jump
             if (isGrounded)
@@ -102,6 +115,10 @@ public class PlayerMovement : MonoBehaviour
         {
             UnityEngine.Debug.Log("Slidin");
         }
+        else if (!canSlide && Input.GetKeyDown(KeyCode.S))
+        {
+            grindJump = false;
+        }
     }
 
     /// <summary>
@@ -123,11 +140,13 @@ public class PlayerMovement : MonoBehaviour
         {
             isGrounded = true;
             hasJumped = false;
+            airJump = false;
 
             if (collision.collider.CompareTag("Ground"))
             {
                 landingFeedback?.PlayFeedbacks();
                 canSlide = true;
+                grindJump = false;
             }
         }
     }
@@ -140,8 +159,29 @@ public class PlayerMovement : MonoBehaviour
         {
             isGrounded = false;
             canSlide = false;
+            if (collision.collider.CompareTag("Ground"))
+            {
+                grindJump = true;
+                airJump = false;
+
+            }
+            else if (collision.collider.CompareTag("Platform"))
+            {
+            }
         }
     }
 
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("SlowMotion"))
+        {
+            timeFeedback?.PlayFeedbacks();
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+
+    }
 }

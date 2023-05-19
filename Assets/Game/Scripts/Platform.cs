@@ -9,8 +9,7 @@ public class Platform : MonoBehaviour
     public Collider playersCollider;
     public float timer = .5f;
 
-    private bool canDrop;
-    private bool startTimer;
+    private bool touchingPlatform;
 
     [Tooltip("The original collider. Will always be present thanks to the RequireComponent attribute.")]
     private new BoxCollider collider = null;
@@ -25,6 +24,7 @@ public class Platform : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         // if player has positive Y velocity
         // Disable collision
         if (playersRb.velocity.y > 0)
@@ -33,64 +33,27 @@ public class Platform : MonoBehaviour
         }
         // if players has negative Y velocity
         // enable collision
-        else if (playersRb.velocity.y < 0 && !canDrop)
+        else if (playersRb.velocity.y < 0)
         {
             EnableCollision();
         }
-        else if(playersRb.velocity.y == 0 && Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.S) && touchingPlatform)
         {
-            canDrop = true;
-            timer = .5f;
-            startTimer = true;
-            DisableCollision();
+            DisableCollider(.5f);
         }
-
-        if (startTimer)
-        {
-            timer -= Time.deltaTime;
-        }
-
-        if (timer <= 0f)
-        {
-            canDrop = false;
-        }
-
-
-
-
-
-
-
-        /*
-        if (playersRb.velocity.y > 0)
-        {
-            //Debug.Log("Positive");
-            Physics.IgnoreCollision(this.collider, playersCollider, true);
-        }
-        else if (playersRb.velocity.y < 0 && !canDrop)
-        {
-            //Debug.Log("Negative");
-            Physics.IgnoreCollision(this.collider, playersCollider, false);
-        }
-        else if (Input.GetKey(KeyCode.S) && playersRb.velocity.y == 0 && )
-        {
-            Physics.IgnoreCollision(this.collider, playersCollider, true);
-        }*/
 
     }
 
-
-
-    private void DisableCollisionTimer()
+    public void DisableCollider(float duration)
     {
-        timer -= Time.deltaTime;
+        collider.enabled = false;
+        Invoke("EnableCollider", duration);
+    }
 
-        if (timer <= 0f)
-        {
-            Physics.IgnoreCollision(this.collider, playersCollider, true);
-            timer = 0f;
-        }
 
+    private void EnableCollider()
+    {
+        collider.enabled = true;
     }
 
     private void EnableCollision()
@@ -103,12 +66,11 @@ public class Platform : MonoBehaviour
         Physics.IgnoreCollision(this.collider, playersCollider, true); ;
     }
 
-    /*
     private void OnCollisionStay(Collision collision)
     {
         if (collision.collider.CompareTag("Player"))
         {
-            canDrop = true;
+            touchingPlatform = true;
         }
     }
 
@@ -116,10 +78,8 @@ public class Platform : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            timerStart = true;
+            touchingPlatform = false;
         }
     }
-
-    */
 
 }
