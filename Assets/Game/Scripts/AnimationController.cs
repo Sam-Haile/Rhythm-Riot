@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AnimationController : MonoBehaviour
 {
 
     public PlayerMovement playerMovement;
     public Animator animator;
+
+    public UnityEvent onTriggerActivated;
 
     // Start is called before the first frame update
     void Start()
@@ -35,9 +38,19 @@ public class AnimationController : MonoBehaviour
             animator.SetBool("toAir", false);
         }
 
+        if (playerMovement.beginGame == true)
+        {
+            animator.SetBool("beginGame", true);
+        }
+
     }
 
-
+    public void ActivateTrigger()
+    {
+        // Trigger activation logic...
+        animator.SetTrigger("slide");
+        onTriggerActivated.Invoke();
+    }
 
 
 }

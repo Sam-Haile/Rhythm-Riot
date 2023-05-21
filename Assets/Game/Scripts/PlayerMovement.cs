@@ -27,11 +27,20 @@ public class PlayerMovement : MonoBehaviour
     public MMFeedbacks timeFeedback;
     public GameObject jumpParticles;
 
+    public BoxCollider boxCollider;
+
+
+    public AnimationController scriptWithTrigger;
+
+    private float num = 1f;
 
     [HideInInspector]
     public bool airJump;
     [HideInInspector]
     public bool grindJump;
+    [HideInInspector]
+    public bool beginGame = false;
+    [HideInInspector]
 
     void Start()
     {
@@ -47,6 +56,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         Move();
 
         JumpInput();
@@ -60,7 +70,20 @@ public class PlayerMovement : MonoBehaviour
             timeFeedback?.StopFeedbacks();
         }
 
+
+
+
         //jumpParticles.transform.position = new Vector3(transform.position.x, transform.position.y -1.1f, transform.position.z);
+    }
+
+    private void RestoreColliders()
+    {
+            if (num <= 0)
+            {
+                boxCollider.center = new Vector3(boxCollider.center.x, 1.36f, boxCollider.center.z);
+                boxCollider.size = new Vector3(boxCollider.size.x, 2.82f, 1.42f);
+            }
+            num -= Time.deltaTime;
     }
 
     private void JumpInput()
@@ -113,12 +136,16 @@ public class PlayerMovement : MonoBehaviour
     {
         if (canSlide && Input.GetKeyDown(KeyCode.S))
         {
-            UnityEngine.Debug.Log("Slidin");
+            boxCollider.center = new Vector3(boxCollider.center.x, 0.75f, boxCollider.center.z);
+            boxCollider.size = new Vector3(boxCollider.size.x, 1.4f, 3.67f);
+            scriptWithTrigger.ActivateTrigger();
         }
         else if (!canSlide && Input.GetKeyDown(KeyCode.S))
         {
             grindJump = false;
         }
+
+
     }
 
     /// <summary>
@@ -126,10 +153,18 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        Vector3 startPos = transform.position;
-        transform.Translate(transform.right * moveSpeed * Time.deltaTime);
-        Vector3 endPos = transform.position;
-        UnityEngine.Debug.DrawLine(startPos, endPos, Color.green, 2f);
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            beginGame = true;
+        }
+
+        if (beginGame)
+        {
+            Vector3 startPos = transform.position;
+            transform.Translate(transform.right * moveSpeed * Time.deltaTime);
+            Vector3 endPos = transform.position;
+            UnityEngine.Debug.DrawLine(startPos, endPos, Color.green, 2f);
+        }
     }
 
 
@@ -159,6 +194,7 @@ public class PlayerMovement : MonoBehaviour
         {
             isGrounded = false;
             canSlide = false;
+
             if (collision.collider.CompareTag("Ground"))
             {
                 grindJump = true;
@@ -180,8 +216,4 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-
-    }
 }
