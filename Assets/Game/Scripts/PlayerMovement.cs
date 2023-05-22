@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
 
     public BoxCollider boxCollider;
 
+    public AudioSource music;
 
     public AnimationController scriptWithTrigger;
 
@@ -41,6 +42,10 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector]
     public bool beginGame = false;
     [HideInInspector]
+    private void Awake()
+    {
+        music.Pause();
+    }
 
     void Start()
     {
@@ -67,11 +72,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.L))
         {
+            music.Play();
             timeFeedback?.StopFeedbacks();
         }
-
-
-
 
         //jumpParticles.transform.position = new Vector3(transform.position.x, transform.position.y -1.1f, transform.position.z);
     }
@@ -105,6 +108,7 @@ public class PlayerMovement : MonoBehaviour
             // If the player is in the air and hasn't jumped before, perform a double jump
             else if (!hasJumped)
             {
+                scriptWithTrigger.DoubleJumpTrigger();
                 rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z); // Zero out the horizontal velocity
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 hasJumped = true;
@@ -138,7 +142,7 @@ public class PlayerMovement : MonoBehaviour
         {
             boxCollider.center = new Vector3(boxCollider.center.x, 0.75f, boxCollider.center.z);
             boxCollider.size = new Vector3(boxCollider.size.x, 1.4f, 3.67f);
-            scriptWithTrigger.ActivateTrigger();
+            scriptWithTrigger.SlideTrigger();
         }
         else if (!canSlide && Input.GetKeyDown(KeyCode.S))
         {
@@ -155,6 +159,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
+            music.Play();
             beginGame = true;
         }
 
@@ -179,9 +184,16 @@ public class PlayerMovement : MonoBehaviour
 
             if (collision.collider.CompareTag("Ground"))
             {
+                jumpForce = 40;
+                globalGravity = -90;
                 landingFeedback?.PlayFeedbacks();
                 canSlide = true;
                 grindJump = false;
+            }
+            if (collision.collider.CompareTag("Platform"))
+            {
+               // jumpForce = 10;
+               // globalGravity = -15f;
             }
         }
     }
@@ -203,6 +215,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (collision.collider.CompareTag("Platform"))
             {
+
             }
         }
     }
@@ -212,6 +225,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.CompareTag("SlowMotion"))
         {
+            music.Pause();
             timeFeedback?.PlayFeedbacks();
         }
     }

@@ -11,13 +11,8 @@ public class AnimationController : MonoBehaviour
 
     public UnityEvent onTriggerActivated;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    public Collider gameEndCollider;
 
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if (playerMovement.grindJump == true)
@@ -45,12 +40,27 @@ public class AnimationController : MonoBehaviour
 
     }
 
-    public void ActivateTrigger()
+    public void SlideTrigger()
     {
         // Trigger activation logic...
         animator.SetTrigger("slide");
         onTriggerActivated.Invoke();
     }
 
+    public void DoubleJumpTrigger()
+    {
+        // Trigger activation logic...
+        animator.SetTrigger("doubleJump");
+        onTriggerActivated.Invoke();
+    }
 
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("gameEnd"))
+        {
+            playerMovement.beginGame = false;
+            animator.SetTrigger("gameEnd");
+        }
+    }
 }

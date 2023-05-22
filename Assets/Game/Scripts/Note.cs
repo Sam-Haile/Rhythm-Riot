@@ -8,9 +8,8 @@ public class Note : MonoBehaviour
     // Destroy the object once collected
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("NoteSensor"))
+        if (other.CompareTag("Player"))
         {
-            Destroy(gameObject);
         }
     }
 }

@@ -9,6 +9,12 @@ TagManager:
   - Note
   - NoteSensor
   - SlowMotion
+  - sprayCan
+  - gameEnd
+  - can1
+  - can2
+  - can3
+  - can4
   layers:
   - Default
   - TransparentFX
