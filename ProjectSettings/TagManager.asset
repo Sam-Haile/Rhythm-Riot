@@ -15,6 +15,7 @@ TagManager:
   - can2
   - can3
   - can4
+  - scoreScreen
   layers:
   - Default
   - TransparentFX

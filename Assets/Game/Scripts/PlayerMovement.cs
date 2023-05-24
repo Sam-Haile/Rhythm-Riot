@@ -19,36 +19,33 @@ public class PlayerMovement : MonoBehaviour
     //Used for tracking sliding ability
     private bool canSlide = false;
 
-    private float gravityScale = 1.0f;
-    public float globalGravity = -90f;
-
-    public MMFeedbacks jumpFeedback;
-    public MMFeedbacks landingFeedback;
-    public MMFeedbacks timeFeedback;
-    public GameObject jumpParticles;
-
-    public BoxCollider boxCollider;
-
-    public AudioSource music;
-
-    public AnimationController scriptWithTrigger;
-
-    private float num = 1f;
-
     [HideInInspector]
     public bool airJump;
     [HideInInspector]
     public bool grindJump;
     [HideInInspector]
-    public bool beginGame = false;
+    public bool beginGame;
     [HideInInspector]
-    private void Awake()
-    {
-        music.Pause();
-    }
+    public bool isGrinding;
+
+    private float gravityScale = 1.0f;
+    public float globalGravity = -90f;
+
+    public MMFeedbacks jumpFeedback;
+    public MMFeedbacks landingFeedback;
+
+    public AudioManager audioManager;
+    public GameObject jumpParticles;
+
+    public BoxCollider boxCollider;
+
+    public AnimationController scriptWithTrigger;
+
+    private float num = 1f;
 
     void Start()
     {
+        beginGame = false;
         rb.useGravity = false;
     }
 
@@ -61,7 +58,6 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         Move();
 
         JumpInput();
@@ -69,14 +65,6 @@ public class PlayerMovement : MonoBehaviour
         LeftClickInput();
 
         SlideInput();
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            music.Play();
-            timeFeedback?.StopFeedbacks();
-        }
-
-        //jumpParticles.transform.position = new Vector3(transform.position.x, transform.position.y -1.1f, transform.position.z);
     }
 
     private void RestoreColliders()
@@ -113,7 +101,6 @@ public class PlayerMovement : MonoBehaviour
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 hasJumped = true;
             }
-
         }
 
         if (rb.velocity.y > 0)
@@ -124,7 +111,6 @@ public class PlayerMovement : MonoBehaviour
         {
             gravityScale = 1f;
         }
-
     }
 
     private void LeftClickInput()
@@ -133,7 +119,6 @@ public class PlayerMovement : MonoBehaviour
         {
             UnityEngine.Debug.Log("Left mouse button clicked!");
         }
-
     }
 
     private void SlideInput()
@@ -148,8 +133,6 @@ public class PlayerMovement : MonoBehaviour
         {
             grindJump = false;
         }
-
-
     }
 
     /// <summary>
@@ -159,8 +142,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            music.Play();
             beginGame = true;
+            audioManager.PlayMusic();
         }
 
         if (beginGame)
@@ -189,11 +172,11 @@ public class PlayerMovement : MonoBehaviour
                 landingFeedback?.PlayFeedbacks();
                 canSlide = true;
                 grindJump = false;
+
+
             }
-            if (collision.collider.CompareTag("Platform"))
+            else if (collision.collider.CompareTag("Platform"))
             {
-               // jumpForce = 10;
-               // globalGravity = -15f;
             }
         }
     }
@@ -215,18 +198,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (collision.collider.CompareTag("Platform"))
             {
-
             }
-        }
-    }
-
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("SlowMotion"))
-        {
-            music.Pause();
-            timeFeedback?.PlayFeedbacks();
         }
     }
 

@@ -2,19 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour
 {
 
     public TextMeshProUGUI scoreText;
+
     private int score;
-
-
+    private int noteTracker;
+    private int sprayCanTracker;
     public GameObject[] sprayCans;
+
+    public int notesCollected
+    {
+        get { return noteTracker; }
+    }
+    public int sprayCansCollected
+    {
+        get { return sprayCanTracker; }
+    }
+
 
     // Start is called before the first frame update
     void Start()
     {
+        noteTracker = 0;
+        sprayCanTracker = 0;
         score = int.Parse(scoreText.text);
         foreach (GameObject can in sprayCans)
         {
@@ -22,28 +36,35 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Note"))
         {
+            noteTracker++;
             IncreaseScore(100);
             Destroy(other.gameObject);
         }
 
         if (other.CompareTag("can1"))
+        {
+            sprayCanTracker++;
             CollectSprayCan(0, other);
+        }
         else if (other.CompareTag("can2"))
+        {
+            sprayCanTracker++;
             CollectSprayCan(1, other);
+        }
         else if (other.CompareTag("can3"))
+        {
+            sprayCanTracker++;
             CollectSprayCan(2, other);
+        }
         else if (other.CompareTag("can4"))
+        {
+            sprayCanTracker++;
             CollectSprayCan(3, other);
+        }
     }
 
     private void IncreaseScore(int scoreIncrease)
@@ -58,4 +79,7 @@ public class ScoreManager : MonoBehaviour
         Destroy(other.gameObject);
         sprayCans[index].SetActive(true);
     }
+
+
+
 }

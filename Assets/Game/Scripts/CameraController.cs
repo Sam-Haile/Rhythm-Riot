@@ -7,13 +7,4 @@ public class CameraController : MonoBehaviour
     public Vector3 Position { get; set; }
     public Vector3 Rotation { get; set; }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void LateUpdate()
-    {
-    }
 }
