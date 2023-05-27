@@ -8,7 +8,6 @@ public class ScoreManager : MonoBehaviour
 {
 
     public TextMeshProUGUI scoreText;
-
     private int score;
     private int noteTracker;
     private int sprayCanTracker;
@@ -80,6 +79,33 @@ public class ScoreManager : MonoBehaviour
         sprayCans[index].SetActive(true);
     }
 
+    public string DetermineGrade()
+    {
+        if (score >= 7600)
+        {
+            return "S";
+        }
+        else if (score < 7600 && score >= 6080)
+        {
+            return "A";
+        }
+        else if (score < 6080 && score >= 4560)
+        {
+            return "B";
+        }
+        else if (score < 4560 && score >= 3040)
+        {
+            return "C";
+        }  
+        else if (score < 3040 && score >= 1520)
+        {
+            return "D";
+        }
+        else
+        {
+            return "F";
+        }
 
+    }
 
 }

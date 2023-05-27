@@ -6,6 +6,7 @@ public class AudioManager : MonoBehaviour
 {
     public AudioSource music;
 
+    public AudioSource spraySound;
 
     private void Awake()
     {
