@@ -7,21 +7,13 @@ using UnityEngine;
 public class LevelSelectManager : MonoBehaviour
 {
 
-    public MMFeedbacks changeTrackForward;
-    public MMFeedbacks changeTrackBackward;
-
-
-    private GameObject currentTrack;
+    public MMFeedbacks[] trackTransitions;
+    public AudioSource[] music;
     public GameObject[] tracks;
+    private GameObject currentTrack;
 
-    public AudioSource hummingTheBaseline;
-    public AudioSource okHouse;
-
-
-    // Start is called before the first frame update
     void Start()
     {
-        hummingTheBaseline.Play();
         currentTrack = tracks[0];
     }
 
@@ -29,32 +21,68 @@ public class LevelSelectManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            SceneManager.LoadScene(0);
+            MainMenu();
         }
     }
 
-
+    /// <summary>
+    /// Returns to the previous track in the list
+    /// </summary>
     public void ChangeTrackBackward()
     {
         if (currentTrack == tracks[1])
         {
-            changeTrackBackward?.PlayFeedbacks();
+            trackTransitions[3]?.PlayFeedbacks();
             currentTrack = tracks[0];
-            okHouse.Stop();
-            hummingTheBaseline.Play();
+            StopMusic();
+            music[0].Play();
         }
-
+        else if (currentTrack == tracks[2])
+        {
+            trackTransitions[2]?.PlayFeedbacks();
+            currentTrack = tracks[1];
+            StopMusic();
+            music[1].Play();
+        }
     }
 
-
+    /// <summary>
+    /// Displays the next track in the list
+    /// </summary>
     public void ChangeTrackForward()
     {
         if (currentTrack == tracks[0])
         {
-            changeTrackForward?.PlayFeedbacks();
+            trackTransitions[0]?.PlayFeedbacks();
             currentTrack = tracks[1];
-            hummingTheBaseline.Stop();
-            okHouse.Play();
+            StopMusic();
+            music[1].Play();
         }
+        else if (currentTrack == tracks[1])
+        {
+            trackTransitions[1]?.PlayFeedbacks();
+            currentTrack = tracks[2];
+            StopMusic();
+            music[2].Play();
+        }
+    }
+
+    /// <summary>
+    /// Stops all songs
+    /// </summary>
+    private void StopMusic()
+    {
+        foreach (AudioSource song in music)
+        {
+            song.Stop();
+        }
+    }
+
+    /// <summary>
+    /// Returns to the main menu
+    /// </summary>
+    public void MainMenu()
+    {
+        SceneManager.LoadScene(0);
     }
 }

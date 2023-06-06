@@ -9,11 +9,12 @@ public class AnimationController : MonoBehaviour
     public PlayerMovement playerMovement;
     public Animator animator;
 
+
     public ParticleSystem fireFX1;
     public ParticleSystem fireFX2;
     public ParticleSystem noteFX;
-
     public UnityEvent onTriggerActivated;
+    private int num = 0;
 
     public Collider gameEndCollider;
 
@@ -24,6 +25,9 @@ public class AnimationController : MonoBehaviour
         noteFX.Stop();
     }
 
+    /// <summary>
+    /// Display various animations depending on players actions
+    /// </summary>
     void Update()
     {
         if (playerMovement.grindJump)
@@ -32,10 +36,8 @@ public class AnimationController : MonoBehaviour
         }   
         else if (!playerMovement.grindJump)
         {
-
             animator.SetBool("toPlatform", false);
         }
-        
         if (playerMovement.airJump)
         {
             animator.SetBool("toAir", true);
@@ -44,14 +46,21 @@ public class AnimationController : MonoBehaviour
         {
             animator.SetBool("toAir", false);
         }
-
         if (playerMovement.beginGame)
         {
             animator.SetBool("beginGame", true);
         }
 
+        if (Input.GetKeyDown(KeyCode.Return) && num == 0)
+        {
+            num++;
+        }
+
     }
 
+    /// <summary>
+    /// Display Slide Animation on 'S' key press
+    /// </summary>
     public void SlideTrigger()
     {
         // Trigger activation logic...
@@ -59,6 +68,9 @@ public class AnimationController : MonoBehaviour
         onTriggerActivated.Invoke();
     }
 
+    /// <summary>
+    /// Triggers jump animation a second time
+    /// </summary>
     public void DoubleJumpTrigger()
     {
         // Trigger activation logic...
@@ -67,13 +79,16 @@ public class AnimationController : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Display animations when touching a note/ending the game
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("gameEnd"))
         {
             animator.SetTrigger("gameEnd");
         }
-
         if (other.CompareTag("Note"))
         {
             noteFX.Play();
@@ -81,6 +96,10 @@ public class AnimationController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Add a fire effect when touching the pipe
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.CompareTag("Platform"))
@@ -93,10 +112,13 @@ public class AnimationController : MonoBehaviour
             fireFX1.Stop();
             fireFX2.Stop();
         }
-
-
     }
 
+
+    /// <summary>
+    /// Stop fire effect 
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionExit(Collision collision)
     {
         if (collision.collider.CompareTag("Platform"))

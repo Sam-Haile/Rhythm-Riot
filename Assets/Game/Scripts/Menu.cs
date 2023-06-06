@@ -3,10 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class Menu : MonoBehaviour
 {
@@ -19,35 +19,29 @@ public class Menu : MonoBehaviour
 
     public MMFeedbacks transition1;
     public MMFeedbacks transition2;
-    public MMFeedbacks transitionScene;
-    //public GameObject fadeToBlack;
-    CameraController[] cameraData = new CameraController[3];
 
     public MMFeedbacks textFeedback;
+
+
 
     private void Start()
     {
         ToggleMenuIcons(false);
-        //fadeToBlack.SetActive(false);
 
         // Initial Position
         cameraFOV.fieldOfView = 40;
         cam.transform.position = new Vector3(42.91f, 1.21f, -35.9f);
         cam.transform.rotation = Quaternion.Euler(new Vector3(-9.4f, -56.15f, 0f));
-    }
+        textFeedback?.PlayFeedbacks();
 
+    }
 
     private void Update()
     {
-        if (pressAnyButton.activeSelf)
+        if (Input.anyKeyDown && pressAnyButton != null)
         {
-            textFeedback?.PlayFeedbacks();
-        }
-
-        if (Input.anyKeyDown)
-        {
+            Destroy(pressAnyButton);
             transition1?.PlayFeedbacks();
-            pressAnyButton.SetActive(false);
             ToggleMenuIcons(true);
         }
     }
@@ -65,13 +59,12 @@ public class Menu : MonoBehaviour
         {
             parentTransform.GetChild(j).gameObject.SetActive(activate);
         }
-
     }
 
 
     public void QuitGame()
     {
-        Debug.Log("QUIT GAME!");
+        Application.Quit();
     }
 
     public void Transition2()
@@ -84,9 +77,6 @@ public class Menu : MonoBehaviour
         transition1?.PlayFeedbacks();
     }
 
-    public void TransitionScene()
-    {
-        //fadeToBlack.SetActive(true);
-        transitionScene?.PlayFeedbacks();
-    }
+
+
 }

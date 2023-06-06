@@ -13,6 +13,8 @@ public class ScoreManager : MonoBehaviour
     private int sprayCanTracker;
     public GameObject[] sprayCans;
 
+    public AudioManager audioManager;
+
     public int notesCollected
     {
         get { return noteTracker; }
@@ -29,6 +31,7 @@ public class ScoreManager : MonoBehaviour
         noteTracker = 0;
         sprayCanTracker = 0;
         score = int.Parse(scoreText.text);
+
         foreach (GameObject can in sprayCans)
         {
             can.SetActive(false);
@@ -75,6 +78,7 @@ public class ScoreManager : MonoBehaviour
     private void CollectSprayCan(int index, Collider other)
     {
         IncreaseScore(500);
+        audioManager.CanSoundEffect();
         Destroy(other.gameObject);
         sprayCans[index].SetActive(true);
     }

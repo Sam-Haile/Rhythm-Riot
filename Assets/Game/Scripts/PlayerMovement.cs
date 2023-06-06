@@ -8,17 +8,21 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    //Main player physics fields
     public Rigidbody rb;
     public float moveSpeed = 10f;
     public float jumpForce = 3f;
+    private float gravityScale = 1.0f;
+    public float globalGravity = -90f;
+    public GameObject pressEnter;
 
     //Used for tracking jumps
     private bool isGrounded = false;
     private bool hasJumped = false;
 
-    //Used for tracking sliding ability
-    private bool canSlide = false;
 
+    //Used for tracking various abilities
+    private bool canSlide = false;
     [HideInInspector]
     public bool airJump;
     [HideInInspector]
@@ -28,23 +32,16 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector]
     public bool isGrinding;
 
-    private float gravityScale = 1.0f;
-    public float globalGravity = -90f;
-
     public MMFeedbacks jumpFeedback;
     public MMFeedbacks landingFeedback;
+    public BoxCollider playerCollider;
 
     public AudioManager audioManager;
-    public GameObject jumpParticles;
-
-    public BoxCollider boxCollider;
-
     public AnimationController scriptWithTrigger;
-
-    private float num = 1f;
 
     void Start()
     {
+        pressEnter.SetActive(true);
         beginGame = false;
         rb.useGravity = false;
     }
@@ -55,28 +52,16 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(gravity, ForceMode.Acceleration);
     }
 
-    // Update is called once per frame
     void Update()
     {
         Move();
-
         JumpInput();
-
-        LeftClickInput();
-
         SlideInput();
     }
 
-    private void RestoreColliders()
-    {
-            if (num <= 0)
-            {
-                boxCollider.center = new Vector3(boxCollider.center.x, 1.36f, boxCollider.center.z);
-                boxCollider.size = new Vector3(boxCollider.size.x, 2.82f, 1.42f);
-            }
-            num -= Time.deltaTime;
-    }
-
+    /// <summary>
+    /// Physics logic when jumping
+    /// </summary>
     private void JumpInput()
     {
         // Check for jump input
@@ -113,20 +98,15 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void LeftClickInput()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            UnityEngine.Debug.Log("Left mouse button clicked!");
-        }
-    }
-
+    /// <summary>
+    /// Decrease the size of the players box colldier when sliding
+    /// </summary>
     private void SlideInput()
     {
         if (canSlide && Input.GetKeyDown(KeyCode.S))
         {
-            boxCollider.center = new Vector3(boxCollider.center.x, 0.75f, boxCollider.center.z);
-            boxCollider.size = new Vector3(boxCollider.size.x, 1.4f, 3.67f);
+            playerCollider.center = new Vector3(playerCollider.center.x, 0.75f, playerCollider.center.z);
+            playerCollider.size = new Vector3(playerCollider.size.x, 1.4f, 3.67f);
             scriptWithTrigger.SlideTrigger();
         }
         else if (!canSlide && Input.GetKeyDown(KeyCode.S))
@@ -140,8 +120,9 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        if (Input.GetKeyDown(KeyCode.Return) && !beginGame)
         {
+            pressEnter.SetActive(false);
             beginGame = true;
             audioManager.PlayMusic();
         }
@@ -156,7 +137,10 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    // Check if the player is colliding with a platform
+    /// <summary>
+    /// Check if the player is colliding with a platform
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.CompareTag("Ground") || collision.collider.CompareTag("Platform"))
@@ -172,17 +156,15 @@ public class PlayerMovement : MonoBehaviour
                 landingFeedback?.PlayFeedbacks();
                 canSlide = true;
                 grindJump = false;
-
-
-            }
-            else if (collision.collider.CompareTag("Platform"))
-            {
             }
         }
     }
 
 
-    // Check if the player is no longer colliding with a platform
+    /// <summary>
+    /// Check if the player is no longer colliding with a platform
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionExit(Collision collision)
     {
         if (collision.collider.CompareTag("Ground") || collision.collider.CompareTag("Platform"))
@@ -194,10 +176,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 grindJump = true;
                 airJump = false;
-
-            }
-            else if (collision.collider.CompareTag("Platform"))
-            {
             }
         }
     }
